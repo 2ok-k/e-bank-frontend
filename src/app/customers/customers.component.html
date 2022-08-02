@@ -1,0 +1,64 @@
+<div class="container mt-2">
+
+  <!--Quand tout va bien récupère la liste des clients-->
+  <ng-container *ngIf="customers | async as listCustomers; else failureOrLoading">
+    <div class="card">
+      <div class="card-header">Customers list</div>
+      <div class="card-body">
+        <!--Recherche-->
+        <div *ngIf="searchFormGroup">
+          <form action="" method="get" [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+            <div class="input-group">
+              <label for="keyword" class="input-group-text">Keyword :</label>
+              <input type="text" formControlName="keyword" id="keyword" class="form-control">
+              <button class="btn btn-info">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <td>ID</td>
+              <td>Name</td>
+              <td>Email</td>
+              <td>Actions</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr  *ngFor="let c of customers |async">
+              <td>{{c.id}}</td>
+              <td>{{c.name}}</td>
+              <td>{{c.email}}</td>
+              <td>
+                <button (click)="handleDeleteCustomer(c)" class="btn btn-danger"><i class="bi bi-trash"></i></button>
+              </td>
+              <td>
+                <button (click)="handleCustomerAccounts(c)" class="btn btn-success">
+                  Accounts
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+
+  <!--En cas d'erreur ou chargement ou recherche de données afficher pour chaque cas-->
+  <ng-template #failureOrLoading>
+    <!--En cas d'erreur-->
+    <ng-container *ngIf="errorMessage; else loading">
+      <div class="text-danger">
+        {{errorMessage}}
+      </div>
+    </ng-container>
+    <!--En cas de chargement ou recherche des données-->
+    <ng-template #loading>
+      Loading ...
+    </ng-template>
+
+  </ng-template>
+</div>
